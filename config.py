@@ -6,3 +6,7 @@ class ProdConfig(Config):
 
 class DevConfig(Config):
     DEBUG = True
+
+class DevConfig(Config):
+    debug = True
+    SQLALCHEMY_DATABASE_URI = "YOUR URI"

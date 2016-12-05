@@ -9,4 +9,6 @@ class DevConfig(Config):
 
 class DevConfig(Config):
     debug = True
-    SQLALCHEMY_DATABASE_URI = "YOUR URI"
+
+
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:hmx@10931@127.0.0.1:3306/flask"

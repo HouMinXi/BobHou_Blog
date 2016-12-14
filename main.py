@@ -2,6 +2,9 @@ from flask import Flask
 from config import DevConfig
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import import func
+
+
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
@@ -13,6 +16,17 @@ def home():
 
 if __name__ == '__main__':
    app.run()
+
+def sidebar_data():
+    recent = Post.query.order_by(
+            Post.publish_date.desc()
+            ).limit(5).all()
+            top_tags = db.session.query(
+                    Tag, func.count(tags.c.post_id).label('total')
+                    ）.join(
+                        tags
+                        ).group_by(Tag).order_by('total DESC').limit(5).all()
+                        return recent, top_tags
 
 class User(db.Model):
     __tablename__ = 'user_table_name'

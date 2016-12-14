@@ -1,15 +1,17 @@
-"""create snapshot table
-Revision ID: e1f94205fdcc
-Revises: 
-Create Date: 2016-12-10 23:22:08.326565
+"""second migration
+
+Revision ID: 5fbb672c4632
+Revises: a0f063a84cad
+Create Date: 2016-12-11 00:32:37.614606
+
 """
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e1f94205fdcc'
-down_revision = None
+revision = '5fbb672c4632'
+down_revision = 'a0f063a84cad'
 branch_labels = None
 depends_on = None
 

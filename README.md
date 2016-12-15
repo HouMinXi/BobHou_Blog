@@ -5,3 +5,6 @@
 Create User, Tag, Comment, Post, post_tags tables.
 Add Alembic function and create the first snapshot for SQL.
 
+2016/12/15
+===============================================================================================
+Create viewer

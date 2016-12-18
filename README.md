@@ -8,3 +8,9 @@ Add Alembic function and create the first snapshot for SQL.
 2016/12/15
 ===============================================================================================
 Create viewer
+
+2016/12/18
+===============================================================================================
+Create tag user post viewer.
+Create a base module and defined a HTML frame.
+Import jQuery puglin.

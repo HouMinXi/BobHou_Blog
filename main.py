@@ -2,7 +2,7 @@ from flask import Flask
 from config import DevConfig
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
-from sqlalchemy import import func
+from sqlalchemy import func
 from flask import Flask, render_template
 
 
@@ -12,9 +12,6 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 @app.route('/<int:page>')
-@app.route('/post/<int:post_id>')
-@app.route('/tag/<string:tag_name>')
-@app.route('/user/<string:username>')
 def home(page=1):
     posts = Post.query.order_by(
         Post.publish_date.desc()
@@ -22,21 +19,23 @@ def home(page=1):
     recent, top_tags = sidebar_data()
 
     return render_template(
-        'home.html',
+        'base.html',
         posts=posts,
         recent=recent,
         top_tags=top_tags
     )
     #return '<h1>Hello World!</h1>'
 
+@app.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     tags = post.tags
     comments = post.comments.order_by(Comment.date.desc()).all()
+
     recent, top_tags = sidebar_data()
     
     return render_template(
-        'post.html'
+        'post.html',
         post=post,
         tags=tags,
         comments=comments,
@@ -44,6 +43,7 @@ def post(post_id):
         top_tags=top_tags
     )
 
+@app.route('/tag/<string:tag_name>')
 def tag(tag_name):
     tag = Tag.query.filter_by(title=tag_name).first_or_404()
     posts = tag.posts.order_by(Post.publish_date.desc()).all()
@@ -57,6 +57,8 @@ def tag(tag_name):
         top_tags=top_tags
 )
 
+
+@app.route('/user/<string:username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     posts = user.posts.order_by(Post.publish_date.desc()).all()
@@ -77,14 +79,15 @@ if __name__ == '__main__':
 
 def sidebar_data():
     recent = Post.query.order_by(
-            Post.publish_date.desc()
-            ).limit(5).all()
-            top_tags = db.session.query(
-                    Tag, func.count(tags.c.post_id).label('total')
-                    ）.join(
-                        tags
-                        ).group_by(Tag).order_by('total DESC').limit(5).all()
-                        return recent, top_tags
+        Post.publish_date.desc()
+    ).limit(5).all()
+
+    top_tags = db.session.query(
+        Tag, func.count(tags.c.post_id).label('total')
+    ).join(
+        tags
+    ).group_by(Tag).order_by('total DESC').limit(5).all()
+    return recent, top_tags
 
 class User(db.Model):
     __tablename__ = 'user_table_name'

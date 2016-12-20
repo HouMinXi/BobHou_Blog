@@ -4,7 +4,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
 from flask import Flask, render_template
-
+from flask_wtf import Form
+from wtforms import StringField, TextAreaField
+from wtforms.validators import DataRequired, Length
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
@@ -161,3 +163,10 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "<Comment '{}'>".format(self.text[:15])
+
+class CommentForm(Form):
+    name = StringField(
+        'Name',
+        validators=[DataRequired(), Length(max=255)]
+    )
+    text = TextAreaField(u'Comment', validators=[DataRequired()])

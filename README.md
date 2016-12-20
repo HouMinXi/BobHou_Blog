@@ -14,3 +14,7 @@ Create viewer
 Create tag user post viewer.
 Create a base module and defined a HTML frame.
 Import jQuery puglin.
+
+2016/12/20
+===============================================================================================
+add a StringField class in main.py,this class inherit wtforms class.

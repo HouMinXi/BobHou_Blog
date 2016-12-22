@@ -18,3 +18,7 @@ Import jQuery puglin.
 2016/12/20
 ===============================================================================================
 add a StringField class in main.py,this class inherit wtforms class.
+
+2016/12/22
+===============================================================================================
+add post.html and add comment checker

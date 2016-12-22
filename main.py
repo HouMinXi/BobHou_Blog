@@ -7,6 +7,8 @@ from flask import Flask, render_template
 from flask_wtf import Form
 from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired, Length
+import re
+import wtforms
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
@@ -28,22 +30,6 @@ def home(page=1):
     )
     #return '<h1>Hello World!</h1>'
 
-@app.route('/post/<int:post_id>')
-def post(post_id):
-    post = Post.query.get_or_404(post_id)
-    tags = post.tags
-    comments = post.comments.order_by(Comment.date.desc()).all()
-
-    recent, top_tags = sidebar_data()
-    
-    return render_template(
-        'post.html',
-        post=post,
-        tags=tags,
-        comments=comments,
-        recent=recent,
-        top_tags=top_tags
-    )
 
 @app.route('/tag/<string:tag_name>')
 def tag(tag_name):
@@ -73,6 +59,33 @@ def user(username):
         recent=recent,
         top_tags=top_tags
 )
+
+#add comment function in viewer
+@app.route('/post/<int:post_id>', methods=('GET', 'POST'))
+def post(post_id):
+    form = CommentForm()
+    if form.validate_on_submit():
+        new_comment = Comment()
+    new_comment.name = form.name.data
+    new_comment.text = form.text.data
+    new_comment.post_id = post_id
+    new_comment.date = datetime.datetime.now()
+    db.session.add(new_comment)
+    db.session.commit()
+    post = Post.query.get_or_404(post_id)
+    tags = Post.tags
+    comments = post.comments.order_by(Comment.date.desc()).all()
+    recent, top_tags = sidebar_data()
+
+    return render_template(
+        'post.html'
+        post=post,
+        tags=tags,
+        comments=comments,
+        recent=recent,
+        top_tags=top_tags,
+        form=form
+    )
 
 
 
@@ -170,3 +183,8 @@ class CommentForm(Form):
         validators=[DataRequired(), Length(max=255)]
     )
     text = TextAreaField(u'Comment', validators=[DataRequired()])
+
+#custom define a E-mail checker
+def custom_email(form, field):
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", filed.data):
+        raise wtforms.ValidationError('Field must be a valid email address.')

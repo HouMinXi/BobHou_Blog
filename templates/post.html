@@ -1,0 +1,16 @@
+<div class="col-lg-l2">
+  <h3> New Comment:</h3>
+  <form method="POST" action="{{ url_for('post', post_id=post.id) }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.name.label }}
+      {% if form.name.errors %}
+        {% for r in form.name.errors %}
+          <p class="help-block">{{ e }}</p>
+        {% endfor %}
+      {% endfor %}
+      {{ form.text(class_='form-control') }}
+    </div>
+    <input class="btn btn-primary" type="submit" value="Add Comment">
+  </form>
+</div>

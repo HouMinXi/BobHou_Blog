@@ -22,3 +22,7 @@ add a StringField class in main.py,this class inherit wtforms class.
 2016/12/22
 ===============================================================================================
 add post.html and add comment checker
+
+2016/12/24
+===============================================================================================
+fixed some parameters in Post function and add name label in post.html

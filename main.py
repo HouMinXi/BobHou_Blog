@@ -7,6 +7,10 @@ from flask import Flask, render_template
 from flask_wtf import Form
 from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired, Length
+from flask import g, session, abort, render_template
+#use a class to descirbe a view 
+from flask.views import View
+
 import re
 import wtforms
 
@@ -29,6 +33,26 @@ def home(page=1):
         top_tags=top_tags
     )
     #return '<h1>Hello World!</h1>'
+
+
+#define a decorator, use to a new request
+
+@app.before_request
+def before_request():
+    if 'user_id' in session:
+    g.user = User.query.get(session['user_id'])
+
+@app.route('/restricted')
+    def admin():
+        if g.user is None:
+            abort(403)
+        return render_template('admin.html')
+
+#use errorhandler decorator to define a custom module
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'),404
+
 
 
 @app.route('/tag/<string:tag_name>')
@@ -184,6 +208,21 @@ class CommentForm(Form):
         validators=[DataRequired(), Length(max=255)]
     )
     text = TextAreaField(u'Comment', validators=[DataRequired()])
+
+#define a class use to descirbe a view
+class GenericView(View):
+    def __init__(self, template):
+        self.template = template
+        super(GenericView, self).__init__()
+
+    def dispatch_request(self):
+        return render_template(self.template)
+
+app.add_url_rule(
+    '/',view_func=GenericView.as_view(
+        'home', template='home.html'
+    )
+)
 
 #custom define a E-mail checker
 def custom_email(form, field):
